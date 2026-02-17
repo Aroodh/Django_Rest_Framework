@@ -9,6 +9,10 @@ from rest_framework.views import APIView
 from employees.models import Employee
 from rest_framework import mixins
 from rest_framework import generics,viewsets
+from blogs.models import Blog,Comment
+from blogs.serializer import BlogSerializer,CommentSerializer
+from .pagenation import CustomPagination
+from employees.filters import EmployeeFilters
 # Create your views here.
 
 @api_view(['GET','POST'])
@@ -189,3 +193,24 @@ class EmployeeViewset(viewsets.ViewSet):
 class EmployeeViewset(viewsets.ModelViewSet):
     queryset=Employee.objects.all()
     serializer_class=EmployeeSerializer
+    pagination_class=CustomPagination
+    # filterset_fields=['designation','emp_name']
+    filterset_class=EmployeeFilters
+    
+class BlogsView(generics.ListCreateAPIView):
+    queryset=Blog.objects.all()
+    serializer_class=BlogSerializer
+
+class CommentView(generics.ListCreateAPIView):
+    queryset=Comment.objects.all()
+    serializer_class=CommentSerializer
+    
+class BlogDetails(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Blog.objects.all()
+    serializer_class=BlogSerializer
+    lookup_field='pk'
+    
+class CommentDetails(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Comment.objects.all()
+    serializer_class=CommentSerializer
+    lookup_field='pk'
